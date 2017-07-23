@@ -15,6 +15,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
+    classMethods: {
+      associate: function(models) {
+        item_factor_values.belongsTo(models.movies, {foreignKey: 'movielens_id'});
+      }
+    },
     tableName: 'item_factor_values'
   });
 };

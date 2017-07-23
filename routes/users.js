@@ -3,7 +3,9 @@ module.exports = function(io) {
     var express = require('express');
     var router = express.Router();
     var models = require('../models');
-    var Highscore = models.highscore; //the connection to users database
+    var highscore = models.highscore; //the connection to users database
+    var movies = models.movies;
+    var item_factor_values = models.item_factor_values;
 
     var playerWaiting = [];
     var playerIngame = [];
@@ -13,7 +15,7 @@ module.exports = function(io) {
 
     /* GET users listing. */
     router.get('/', function(req, res, next) {
-        Highscore.findAll({
+        highscore.findAll({
             limit: 10,
             order: [['Points', 'DESC']]
         }).then(users => {
@@ -77,6 +79,7 @@ module.exports = function(io) {
         game.gameID = playerOne.id + playerTwo.id;
         game.playerOne = playerOne;
         game.playerTwo = playerTwo;
+        game.factorID = getRandomFactorID();
         games.push(game);
 
         playerOne.game = game;
@@ -88,6 +91,8 @@ module.exports = function(io) {
         playerIngame.push(playerTwo);
 
         io.to(game.gameID).emit('startGame', game.gameID);
+        io.to(game.gameID).emit('movies', getMovieSelection(game.factorID));
+
 
     }
 
@@ -114,6 +119,19 @@ module.exports = function(io) {
         }
 
     };
+
+    function getRandomFactorID(){
+    	return  Math.floor((Math.random() * 20) + 3);
+    }
+
+    function getMovieSelection(factorID){
+
+    	  return movies.findAll({
+            limit: 10,
+            
+         include: [item_factor_values]});
+
+    }
 
 
     return router;

@@ -80,6 +80,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
+    classMethods: {
+      associate: function(models) {
+        movies.hasMany(models.item_factor_values, {foreignKey: "item_id", as:  'Workers'});
+      }
+    },
     tableName: 'movies'
   });
 };
