@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('item_factor_values', {
+  var item_factor_values = sequelize.define('item_factor_values', {
     factor_index: {
       type: DataTypes.INTEGER(11),
       allowNull: false
@@ -15,11 +15,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    classMethods: {
-      associate: function(models) {
-        item_factor_values.belongsTo(models.movies, {foreignKey: 'movielens_id'});
-      }
-    },
     tableName: 'item_factor_values'
   });
+
+  item_factor_values.associate = function (models) {
+        item_factor_values.belongsTo(models.movies, {foreignKey: 'item_id', targetKey: 'movielens_id'});
+};
+item_factor_values.removeAttribute('id');
+
+return item_factor_values;
 };

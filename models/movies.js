@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('movies', {
+  var movies =  sequelize.define('movies', {
     movielens_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -79,12 +79,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        movies.hasMany(models.item_factor_values, {foreignKey: "item_id", as:  'Workers'});
-      }
-    },
-    tableName: 'movies'
   });
+
+movies.associate = function (models) {
+ movies.hasMany(models.item_factor_values, {foreignKey: "item_id"});
+};
+
+  return movies;
 };
