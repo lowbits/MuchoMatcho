@@ -1,0 +1,32 @@
+{
+  "development": {
+    "username": "d02720cc",
+    "password": "W92rq5oNdyVWNxbt",
+    "database": "d02720cc",
+    "host": "w00feb69.kasserver.com",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  },
+  "test": {
+    "username": "d02720cc",
+    "password": "W92rq5oNdyVWNxbt",
+    "database": "d02720cc",
+    "host": "w00feb69.kasserver.com",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  },
+  "production": {
+    "username": "d02720cc",
+    "password": "W92rq5oNdyVWNxbt",
+    "database": "d02720cc",
+    "host": "w00feb69.kasserver.com",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  }
+}
