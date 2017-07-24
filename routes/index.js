@@ -84,6 +84,8 @@ module.exports = function(io) {
                 console.log("guess match found!");
                 socket.game.stopTimer();
                 io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.time, calculateScore(socket.game.time));
+                highscore.build({Points: calculateScore(socket.game.time)}).save();
+
             } else {
                 console.log("no guess match");
                 if (socket.guesses.indexOf(guess) > -1) {
