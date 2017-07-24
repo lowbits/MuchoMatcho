@@ -12,6 +12,8 @@ module.exports = function(io) {
     var playerIngame = [];
     var games = [];
 
+    io.set('heartbeat interval', 5);
+
 
 
     router.get('/', function(req, res, next) {
@@ -117,7 +119,7 @@ module.exports = function(io) {
         game.time = 0;
 
         game.timer = setInterval(function() {
-            io.to(game.gameID).emit('time', game.time++);
+            io.to(game.gameID).emit('time', game.time++, calculateScore(game.time));
 
 
         }, 1000);
@@ -223,6 +225,10 @@ module.exports = function(io) {
             array[i] = array[j]
             array[j] = temp
         }
+    }
+
+    function calculateScore(time){
+        return parseInt(1000 * Math.pow(0.95, time/10));
     }
 
 
