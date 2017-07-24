@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('directors', {
+  var directors =  sequelize.define('directors', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -22,4 +22,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'directors'
   });
+
+  directors.associate = function (models) {
+ directors.belongsToMany(models.movies, {through: 'movies_directors', foreignKey: 'director_id'});
+};
+
+return directors;
 };

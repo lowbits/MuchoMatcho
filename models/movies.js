@@ -82,7 +82,8 @@ module.exports = function(sequelize, DataTypes) {
   });
 
 movies.associate = function (models) {
- movies.hasMany(models.item_factor_values, {foreignKey: "item_id"});
+ movies.hasOne(models.item_factor_values, {foreignKey: "item_id"});
+ movies.belongsToMany(models.directors, {through: 'movies_directors', foreignKey: 'movie_movielens_id'});
 };
 
   return movies;

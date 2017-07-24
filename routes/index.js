@@ -5,6 +5,7 @@ module.exports = function(io) {
     var models = require('../models');
     var highscore = models.highscore;
     var movies = models.movies;
+    var directors = models.directors;
     var item_factor_values = models.item_factor_values;
 
     var playerWaiting = [];
@@ -188,10 +189,23 @@ module.exports = function(io) {
                 ['value', 'DESC']
             ],
 
-            include: [movies]
+            include: [{
+            model: movies,
+            required: false
+
+            // include: [{
+            //     model: directors,
+            //      where: {},
+            //      required: false
+            // }]
+        }]
         }).then(movies => {
+            console.log(movies.length);
             shuffle(movies);
             movies = movies.slice(0, 3);
+            movies.forEach(function(movie) {
+                // console.log(Object.getOwnPropertyNames(movie));
+            });
             return movies;
 
         });
