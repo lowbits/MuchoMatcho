@@ -105,7 +105,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script>
 
-var HOST  =window.location.hostname;
+var HOST  =window.location.hostname + (location.port ? ':'+location.port: '');
    var socket = io.connect(HOST);
    var overlay  = $("#overlay");
    var overlayContent = $("#overlay-content");
@@ -182,7 +182,7 @@ socket.on('movies', function(movies){
     <div id="'+movie.movie.movielens_id+'trailer" class="panel-collapse collapse">\
       <div class="panel-body">\
 <iframe id="ytplayer" style="width:100%" type="text/html" \
-  src="http://www.youtube.com/embed/'+movie.movie.trailer_youtube_id+'"\
+  src="https://www.youtube.com/embed/'+movie.movie.trailer_youtube_id+'"\
   frameborder="0" allowfullscreen/>\
   </div>\
     </div>\
