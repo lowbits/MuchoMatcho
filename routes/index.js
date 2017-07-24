@@ -12,7 +12,6 @@ module.exports = function(io) {
     var playerIngame = [];
     var games = [];
 
-    io.set('heartbeat interval', 5);
 
 
 
@@ -84,7 +83,7 @@ module.exports = function(io) {
             if (socket.game.getOtherPlayer(socket).guesses.indexOf(guess) > -1) {
                 console.log("guess match found!");
                 socket.game.stopTimer();
-                io.to(socket.game.gameID).emit('guessMatch', guess);
+                io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.time, calculateScore(socket.game.time));
             } else {
                 console.log("no guess match");
                 if (socket.guesses.indexOf(guess) > -1) {
