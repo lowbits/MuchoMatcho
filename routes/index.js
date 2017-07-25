@@ -1,5 +1,6 @@
 //TODO: sum scores of matches for final score
 //      clear movie list
+//      end game - connection lost separation
 
 module.exports = function(io) {
     var Promise = require('bluebird');
@@ -209,6 +210,8 @@ module.exports = function(io) {
     function newRound(game) {
         game.matches++;
         game.factorID = getRandomFactorID();
+        game.playerOne.guesses = [];
+        game.playerTwo.guesses = [];
         // game.restartTimer();
         startGame(game);
 
