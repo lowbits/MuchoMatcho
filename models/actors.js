@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('actors', {
+  var actors =  sequelize.define('actors', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -22,4 +22,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'actors'
   });
+
+   actors.associate = function (models) {
+ actors.belongsToMany(models.movies, {through: 'movies_cast', foreignKey: 'actor_id'});
+};
+
+return actors;
 };

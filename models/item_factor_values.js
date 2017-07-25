@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   item_factor_values.associate = function (models) {
-        item_factor_values.belongsTo(models.movies, {foreignKey: 'item_id', targetKey: 'movielens_id'});
+        item_factor_values.belongsTo(models.movies, {foreignKey: 'item_id', as: 'movie'});
 };
 item_factor_values.removeAttribute('id');
 

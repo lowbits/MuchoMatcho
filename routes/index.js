@@ -1,4 +1,5 @@
 module.exports = function(io) {
+    var Promise = require('bluebird');
 
     var express = require('express');
     var router = express.Router();
@@ -6,6 +7,7 @@ module.exports = function(io) {
     var highscore = models.highscore;
     var movies = models.movies;
     var directors = models.directors;
+    var actors = models.actors;
     var item_factor_values = models.item_factor_values;
 
     var playerWaiting = [];
@@ -84,7 +86,9 @@ module.exports = function(io) {
                 console.log("guess match found!");
                 socket.game.stopTimer();
                 io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.time, calculateScore(socket.game.time));
-                highscore.build({Points: calculateScore(socket.game.time)}).save();
+                highscore.build({
+                    Points: calculateScore(socket.game.time)
+                }).save();
 
             } else {
                 console.log("no guess match");
@@ -144,7 +148,23 @@ module.exports = function(io) {
         //    game.startTimer();
 
         getMovieSelection(game.factorID).then(movies => {
-            io.to(game.gameID).emit('movies', movies);
+
+            movies.forEach(movie => {
+                Promise.all([getDirectors(movie.movielens_id), getActors(movie.movielens_id)]).spread(function(directors, actors) {
+                    movie.dataValues.directors = directors;
+                    movie.dataValues.actors = actors;
+
+                    io.to(game.gameID).emit('movies', movie);
+
+                })
+
+
+            });
+
+
+
+
+
         });
 
 
@@ -180,35 +200,56 @@ module.exports = function(io) {
         return Math.floor((Math.random() * 20) + 3);
     }
 
+    function getDirectors(movieID) {
+        return directors.findAll({
+            include: [{
+                model: models.movies,
+                where: {
+                    'movielens_id': movieID
+                }
+            }]
+
+        });
+    }
+
+    function getActors(movieID) {
+        return actors.findAll({
+            include: [{
+                model: models.movies,
+                where: {
+                    'movielens_id': movieID
+                }
+            }]
+        });
+    }
+
     function getMovieSelection(factorID) {
 
-        return item_factor_values.findAll({
 
-            where: {
-                factor_index: factorID
-            },
-            limit: 100,
+        return movies.findAll({
+
+
+            limit: 20,
             order: [
-                ['value', 'DESC']
+                [{
+                    model: item_factor_values,
+                    as: 'factor_value'
+                }, 'value', 'DESC']
             ],
 
             include: [{
-            model: movies,
-            required: false
-
-            // include: [{
-            //     model: directors,
-            //      where: {},
-            //      required: false
-            // }]
-        }]
+                model: item_factor_values,
+                as: 'factor_value',
+                where: {
+                    'factor_index': factorID
+                }
+            }]
         }).then(movies => {
             console.log(movies.length);
             shuffle(movies);
             movies = movies.slice(0, 3);
-            movies.forEach(function(movie) {
-                // console.log(Object.getOwnPropertyNames(movie));
-            });
+
+
             return movies;
 
         });
@@ -228,8 +269,8 @@ module.exports = function(io) {
         }
     }
 
-    function calculateScore(time){
-        return parseInt(1000 * Math.pow(0.95, time/10));
+    function calculateScore(time) {
+        return parseInt(1000 * Math.pow(0.95, time / 10));
     }
 
 

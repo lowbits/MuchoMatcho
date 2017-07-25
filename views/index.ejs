@@ -169,40 +169,70 @@ var HOST  =window.location.hostname + (location.port ? ':'+location.port: '');
       } , 1000);
 
 
-  })
+  });
 
-socket.on('movies', function(movies){
-  console.log(movies.length);
+socket.on('movies', function(movie){
+  //console.log(movies);
 
-    movies.forEach(function(movie) {
+      var directorsString =movie.directors[0].name;
+      for(var i = 1; i < movie.directors.length; i++){
+        directorsString += ", "+movie.directors[i].name;
+      };
+
+      var actorsSring =movie.actors[0].name;
+      for(var i = 1; i < movie.actors.length; i++){
+        actorsSring += ", "+movie.actors[i].name;
+      };
+
+
       movieGrid.append('<div class="col-xs-6 col-md-4">\
     <div class="thumbnail">\
-      <img src="'+movie.movie.poster_link+'" alt="">\
+      <img src="'+movie.poster_link+'" alt="">\
       <div class="caption">\
-        <h3>"'+movie.movie.title+'"</h3>\
+        <h3>"'+movie.title+'"</h3>\
         <div class="panel-group">\
   <div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
-        <a data-toggle="collapse" href="#'+movie.movie.movielens_id+'plot" class="accordion-toggle collapsed">Plot</a>\
+        <a data-toggle="collapse" href="#'+movie.movielens_id+'plot" class="accordion-toggle collapsed">Plot</a>\
       </h4>\
     </div>\
-    <div id="'+movie.movie.movielens_id+'plot" class="panel-collapse collapse">\
-      <div class="panel-body">'+movie.movie.plot+'</div>\
+    <div id="'+movie.movielens_id+'plot" class="panel-collapse collapse">\
+      <div class="panel-body">'+movie.plot+'</div>\
     </div>\
   </div>\
   <div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
-        <a data-toggle="collapse" href="#'+movie.movie.movielens_id+'trailer" class="accordion-toggle collapsed">Trailer</a>\
+        <a data-toggle="collapse" href="#'+movie.movielens_id+'trailer" class="accordion-toggle collapsed">Trailer</a>\
       </h4>\
     </div>\
-    <div id="'+movie.movie.movielens_id+'trailer" class="panel-collapse collapse">\
+    <div id="'+movie.movielens_id+'trailer" class="panel-collapse collapse">\
       <div class="panel-body">\
 <iframe id="ytplayer" style="width:100%" type="text/html" \
-  src="https://www.youtube.com/embed/'+movie.movie.trailer_youtube_id+'"\
+  src="https://www.youtube.com/embed/'+movie.trailer_youtube_id+'"\
   frameborder="0" allowfullscreen/>\
   </div>\
+    </div>\
+  </div>\
+  <div class="panel panel-default">\
+    <div class="panel-heading">\
+      <h4 class="panel-title">\
+        <a data-toggle="collapse" href="#'+movie.movielens_id+'directors" class="accordion-toggle collapsed">Directors</a>\
+      </h4>\
+    </div>\
+    <div id="'+movie.movielens_id+'directors" class="panel-collapse collapse">\
+      <div class="panel-body">'+directorsString+'</div>\
+    </div>\
+  </div>\
+   <div class="panel panel-default">\
+    <div class="panel-heading">\
+      <h4 class="panel-title">\
+        <a data-toggle="collapse" href="#'+movie.movielens_id+'actors" class="accordion-toggle collapsed">Actors</a>\
+      </h4>\
+    </div>\
+    <div id="'+movie.movielens_id+'actors" class="panel-collapse collapse">\
+      <div class="panel-body">'+actorsSring+'</div>\
     </div>\
   </div>\
 </div>\
@@ -250,7 +280,6 @@ socket.on('movies', function(movies){
 
 
 
-  });
 
 </script>
 </html>
