@@ -145,14 +145,14 @@ module.exports = function(io) {
         game.globalTime = 600;
         game.matchTime = 0;
         game.startMatchTimer = function() {
-            game.matchTime = 0;
+                        game.matchTime = 0;
 
             game.matchTimer = setInterval(function() {
                 game.matchTime++;
-                // io.to(game.gameID).emit('time', game.matchTime++, calculateScore(game.matchTime));
+               // io.to(game.gameID).emit('time', game.matchTime++, calculateScore(game.matchTime));
                 io.to(game.gameID).emit('globalTime', game.globalTime--, calculateScore(game.matchTime), game.score, game.matches);
 
-                if (game.globalTime < 0) {
+                if(game.globalTime < 0){
                     endGame(game);
                 }
 
@@ -224,7 +224,7 @@ module.exports = function(io) {
     function endGame(game) {
 
         //remove Game
-        game.stopMatchTimer();
+         game.stopMatchTimer();
 
         io.to(game.gameID).emit('endGame', game.score);
 
