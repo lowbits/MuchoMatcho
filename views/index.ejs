@@ -136,7 +136,7 @@ var HOST  =window.location.hostname + (location.port ? ':'+location.port: '');
         if(alreadyInitialized){
       location.reload();
     }
-     overlayContent.html('Username:<br><form action="#"><input type="text" id="usernameInput" class="form-control" style="max-width:300px;display:inline-block;vertical-align: middle;" required><input type="submit" class="btn btn-primary btn-outline" value="OK"></form>');
+     overlayContent.html('Username:<br><form action="#"><input type="text" id="usernameInput" class="form-control" style="max-width:300px;display:inline-block;vertical-align: middle;" required autofocus><input type="submit" class="btn btn-primary btn-outline" value="OK"></form>');
     overlay.fadeIn();
 
   });
