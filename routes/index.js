@@ -36,8 +36,13 @@ module.exports = function(io) {
     io.on('connection', function(socket) {
 
         console.log(socket.id + ' connected');
-        socket.guesses = [];
+        socket.emit("username");
 
+        socket.on('ready', function(username){
+
+socket.guesses = [];
+socket.username= username;
+console.log(socket.username + " waiting");
         socket.emit("waiting");
         playerWaiting.push(socket);
 
@@ -48,6 +53,13 @@ module.exports = function(io) {
 
 
         }
+
+                io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
+
+
+        })
+
+        
 
 
 
@@ -84,11 +96,17 @@ module.exports = function(io) {
             console.log(socket.id + ' made guess: ' + guess);
             if (socket.game.getOtherPlayer(socket).guesses.indexOf(guess) > -1) {
                 console.log("guess match found!");
-                socket.game.stopTimer();
+                socket.game.score += calculateScore(socket.game.time);
                 io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.time, calculateScore(socket.game.time));
-                highscore.build({
-                    Points: calculateScore(socket.game.time)
-                }).save();
+                
+                setTimeout(function(){
+                  newRound(socket.game);
+
+                }, 3000);
+
+                // highscore.build({
+                //     Points: calculateScore(socket.game.time)
+                // }).save();
 
             } else {
                 console.log("no guess match");
@@ -104,14 +122,15 @@ module.exports = function(io) {
             }
         });
 
-        io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
 
     });
 
     function makeGame(playerOne, playerTwo) {
-        console.log("Server: Starting game between " + playerOne.id + " and " + playerTwo.id);
+        console.log("Server: Starting game between " + playerOne.username + " and " + playerTwo.username);
         var game = {};
         game.gameID = playerOne.id + playerTwo.id;
+        game.score = 0;
+        game.matches = 0;
         game.playerOne = playerOne;
         game.playerTwo = playerTwo;
         game.factorID = getRandomFactorID();
@@ -123,14 +142,21 @@ module.exports = function(io) {
         };
         game.time = 0;
 
-        game.timer = setInterval(function() {
+        game.startTimer = function(){
+            game.timer = setInterval(function() {
             io.to(game.gameID).emit('time', game.time++, calculateScore(game.time));
 
 
-        }, 1000);
+        }, 1000)};
 
         game.stopTimer = function() {
             clearInterval(game.timer);
+        };
+
+        game.restartTimer = function(){
+            game.stopTimer();
+            game.time = 0;
+            game.startTimer();
         };
         games.push(game);
 
@@ -144,7 +170,14 @@ module.exports = function(io) {
         playerIngame.push(playerOne);
         playerIngame.push(playerTwo);
 
-        io.to(game.gameID).emit('startGame', game.gameID);
+        startGame(game);
+
+    }
+
+    function startGame(game){
+        game.restartTimer();
+
+        io.to(game.gameID).emit('startGame', game.playerOne.username + " and " + game.playerTwo.username);
         //    game.startTimer();
 
         getMovieSelection(game.factorID).then(movies => {
@@ -167,6 +200,13 @@ module.exports = function(io) {
 
         });
 
+    }
+
+    function newRound(game){
+        game.matches++;
+        game.factorID = getRandomFactorID();
+        // game.restartTimer();
+        startGame(game);
 
     }
 

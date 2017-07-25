@@ -132,15 +132,28 @@ var HOST  =window.location.hostname + (location.port ? ':'+location.port: '');
   });
 
 
-
-   socket.on('waiting', function(){
-    if(alreadyInitialized){
+  socket.on('username', function(){
+        if(alreadyInitialized){
       location.reload();
     }
+     overlayContent.html('Username:<br><input type="text" id="usernameInput" class="form-control" style="max-width:300px;display:inline-block;vertical-align: middle;"><button onclick="chooseUsername()" class="btn btn-primary btn-outline">OK</button>');
+    overlay.fadeIn();
+
+  });
+
+   socket.on('waiting', function(){
+
 
         overlayContent.text("Waiting for players...");
     overlay.fadeIn();
   });
+
+  function chooseUsername(){
+    var username = $("#usernameInput").val();
+    socket.emit("ready", username);
+  }
+
+
 
   socket.on('startGame', function(gameID){
     alreadyInitialized = true;
@@ -256,7 +269,7 @@ socket.on('movies', function(movie){
 
     overlayContent.html('Guess Match found!<br><br>' + guess +'<br>Time: '+time+'<br>Score: '+score+'<br><br><button class="btn btn-primary btn-outline btn-lg" onclick="location.reload()">Neues Match...</button>');
     overlay.fadeIn();
-    socket.disconnect();
+    // socket.disconnect();
 
 
     });
