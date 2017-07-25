@@ -1,3 +1,6 @@
+//TODO: sum scores of matches for final score
+//      clear movie list
+
 module.exports = function(io) {
     var Promise = require('bluebird');
 
@@ -38,28 +41,28 @@ module.exports = function(io) {
         console.log(socket.id + ' connected');
         socket.emit("username");
 
-        socket.on('ready', function(username){
+        socket.on('ready', function(username) {
 
-socket.guesses = [];
-socket.username= username;
-console.log(socket.username + " waiting");
-        socket.emit("waiting");
-        playerWaiting.push(socket);
+            socket.guesses = [];
+            socket.username = username;
+            console.log(socket.username + " waiting");
+            socket.emit("waiting");
+            playerWaiting.push(socket);
 
-        if (playerWaiting.length > 1) {
-
-
-            makeGame(playerWaiting.shift(), playerWaiting.shift());
+            if (playerWaiting.length > 1) {
 
 
-        }
+                makeGame(playerWaiting.shift(), playerWaiting.shift());
 
-                io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
+
+            }
+
+            io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
 
 
         })
 
-        
+
 
 
 
@@ -98,9 +101,9 @@ console.log(socket.username + " waiting");
                 console.log("guess match found!");
                 socket.game.score += calculateScore(socket.game.time);
                 io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.time, calculateScore(socket.game.time));
-                
-                setTimeout(function(){
-                  newRound(socket.game);
+
+                setTimeout(function() {
+                    newRound(socket.game);
 
                 }, 3000);
 
@@ -142,18 +145,19 @@ console.log(socket.username + " waiting");
         };
         game.time = 0;
 
-        game.startTimer = function(){
+        game.startTimer = function() {
             game.timer = setInterval(function() {
-            io.to(game.gameID).emit('time', game.time++, calculateScore(game.time));
+                io.to(game.gameID).emit('time', game.time++, calculateScore(game.time));
 
 
-        }, 1000)};
+            }, 1000)
+        };
 
         game.stopTimer = function() {
             clearInterval(game.timer);
         };
 
-        game.restartTimer = function(){
+        game.restartTimer = function() {
             game.stopTimer();
             game.time = 0;
             game.startTimer();
@@ -174,7 +178,7 @@ console.log(socket.username + " waiting");
 
     }
 
-    function startGame(game){
+    function startGame(game) {
         game.restartTimer();
 
         io.to(game.gameID).emit('startGame', game.playerOne.username + " and " + game.playerTwo.username);
@@ -202,7 +206,7 @@ console.log(socket.username + " waiting");
 
     }
 
-    function newRound(game){
+    function newRound(game) {
         game.matches++;
         game.factorID = getRandomFactorID();
         // game.restartTimer();
