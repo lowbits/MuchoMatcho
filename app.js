@@ -15,7 +15,7 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var server = require('http').createServer(app);  
-var io = require('socket.io')(server, {'pingTimeout':5000, 'pingInterval':3000});
+var io = require('socket.io')(server, {'pingTimeout':10000, 'pingInterval':10000});
 //var index = require('./routes/index');
 
 // view engine setup
