@@ -14,9 +14,6 @@ module.exports = function(io) {
     var playerIngame = [];
     var games = [];
 
-
-
-
     router.get('/', function(req, res, next) {
         highscore.findAll({
             limit: 10,
@@ -30,8 +27,6 @@ module.exports = function(io) {
         });
 
     });
-
-
 
     io.on('connection', function(socket) {
 
@@ -48,20 +43,13 @@ module.exports = function(io) {
 
             if (playerWaiting.length > 1) {
 
-
                 makeGame(playerWaiting.shift(), playerWaiting.shift());
-
 
             }
 
             io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
 
-
         })
-
-
-
-
 
         socket.on('disconnect', function() {
             console.log(this.id + ' disconnected');
@@ -76,20 +64,9 @@ module.exports = function(io) {
 
             }
 
-
-
-
-
-
             io.emit('totalPlayers', (playerWaiting.length + playerIngame.length));
 
-
-
-
         });
-
-
-
 
         socket.on('makeGuess', function(guess) {
             guess = guess.toLowerCase().trim();
@@ -123,7 +100,6 @@ module.exports = function(io) {
             }
         });
 
-
     });
 
     function makeGame(playerOne, playerTwo) {
@@ -156,7 +132,6 @@ module.exports = function(io) {
                     endGame(game);
                 }
 
-
             }, 1000)
         };
         game.stopMatchTimer = function() {
@@ -173,8 +148,6 @@ module.exports = function(io) {
         playerOne.join(game.gameID);
         playerTwo.game = game;
         playerTwo.join(game.gameID)
-
-
 
         playerIngame.push(playerOne);
         playerIngame.push(playerTwo);
@@ -200,12 +173,7 @@ module.exports = function(io) {
 
                 })
 
-
             });
-
-
-
-
 
         });
 
@@ -232,9 +200,7 @@ module.exports = function(io) {
         if (index > -1) {
             games.splice(index, 1);
 
-
             console.log("Ending Game with id " + game.gameID);
-
 
             index = playerIngame.indexOf(game.playerOne);
             if (index > -1) {
@@ -277,9 +243,7 @@ module.exports = function(io) {
 
     function getMovieSelection(factorID) {
 
-
         return movies.findAll({
-
 
             limit: 20,
             order: [
@@ -297,10 +261,8 @@ module.exports = function(io) {
                 }
             }]
         }).then(movies => {
-            console.log(movies.length);
             shuffle(movies);
             movies = movies.slice(0, 3);
-
 
             return movies;
 
@@ -324,7 +286,6 @@ module.exports = function(io) {
     function calculateScore(time) {
         return parseInt(1000 * Math.pow(0.95, time / 10));
     }
-
 
     return router;
 };

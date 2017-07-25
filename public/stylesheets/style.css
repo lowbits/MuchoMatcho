@@ -1,13 +1,19 @@
 .panel-heading .accordion-toggle:after {
     /* symbol for "opening" panels */
-    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
-    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
-    float: right;        /* adjust as needed */
-    color: grey;         /* adjust as needed */
+    font-family: 'Glyphicons Halflings';
+    /* essential for enabling glyphicon */
+    content: "\e114";
+    /* adjust as needed, taken from bootstrap.css */
+    float: right;
+    /* adjust as needed */
+    color: grey;
+    /* adjust as needed */
 }
+
 .panel-heading .accordion-toggle.collapsed:after {
     /* symbol for "collapsed" panels */
-    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+    content: "\e080";
+    /* adjust as needed, taken from bootstrap.css */
 }
 
 .btn-outline {
@@ -44,48 +50,58 @@
     color: #fff;
 }
 
-h1{
-	    font-family: 'VT323', monospace;
-
+h1 {
+    font-family: 'VT323', monospace;
 }
+
 #overlay {
-    /* Height & width depends on how you want to reveal the overlay (see JS below) */    
+    /* Height & width depends on how you want to reveal the overlay (see JS below) */
     height: 100%;
     width: 100%;
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
     left: 0;
     top: 0;
-    background-color: rgb(0,0,0); /* Black fallback color */
-    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
-    overflow-x: hidden; /* Disable horizontal scroll */
-    display:none;
+    background-color: rgb(0, 0, 0);
+    /* Black fallback color */
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Black w/opacity */
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    display: none;
 }
 
+
 /* Position the content inside the overlay */
+
 #overlay-content {
     position: relative;
-    top: 25%; /* 25% from the top */
-    width: 100%; /* 100% width */
-    text-align: center; /* Centered text/links */
-    margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+    top: 25%;
+    /* 25% from the top */
+    width: 100%;
+    /* 100% width */
+    text-align: center;
+    /* Centered text/links */
+    margin-top: 30px;
+    /* 30px top margin to avoid conflict with the close button on smaller screens */
     font-family: 'VT323', monospace;
-        color: white;
-        font-size: 40px;
+    color: white;
+    font-size: 40px;
 }
-#guessForm{
-	padding-bottom: 20px;
+
+#guessForm {
+    padding-bottom: 20px;
 }
 
 #guessList {
 
-	height: 250px;
-	max-height: 250px;
-	    overflow-y: scroll;
-
-
+    height: 250px;
+    max-height: 250px;
+    overflow-y: scroll;
 }
 
-#guessList ul{
-	font-weight: bold;
+#guessList ul {
+    font-weight: bold;
 }
