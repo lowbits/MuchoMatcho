@@ -6,6 +6,7 @@ module.exports = function(io) {
     var models = require('../models');
     var highscore = models.highscore;
     var movies = models.movies;
+    var label = models.label;
     var directors = models.directors;
     var actors = models.actors;
     var item_factor_values = models.item_factor_values;
@@ -73,6 +74,10 @@ module.exports = function(io) {
             console.log(socket.id + ' made guess: ' + guess);
             if (socket.game.getOtherPlayer(socket).guesses.indexOf(guess) > -1) {
                 console.log("guess match found!");
+
+                   
+                saveLabel(socket, guess);
+                    
                 socket.game.stopMatchTimer();
                 socket.game.score += calculateScore(socket.game.matchTime);
                 io.to(socket.game.gameID).emit('guessMatch', guess, socket.game.matchTime, calculateScore(socket.game.matchTime), socket.game.score);
@@ -130,6 +135,7 @@ module.exports = function(io) {
 
                 if (game.globalTime < 0) {
                     endGame(game);
+                    saveHighscore(game);
                 }
 
             }, 1000)
@@ -138,10 +144,7 @@ module.exports = function(io) {
             clearInterval(game.matchTimer);
 
         };
-        game.restartMatchTimer = function() {
-            game.stopMatchTimer();
-            game.startMatchTimer();
-        };
+       
         games.push(game);
 
         playerOne.game = game;
@@ -184,7 +187,6 @@ module.exports = function(io) {
         game.factorID = getRandomFactorID();
         game.playerOne.guesses = [];
         game.playerTwo.guesses = [];
-        // game.restartTimer();
         startGame(game);
 
     }
@@ -211,8 +213,9 @@ module.exports = function(io) {
                 playerIngame.splice(index, 1);
             };
         }
-
+               
     };
+ 
 
     function getRandomFactorID() {
         return Math.floor((Math.random() * 20) + 3);
@@ -268,6 +271,20 @@ module.exports = function(io) {
 
         });
 
+    }
+    function saveLabel(socket, guess){
+        var temp= socket.game.getOtherPlayer(socket).guesses.concat(socket.guesses);
+        label.create({
+            factor_index: socket.game.factorID,
+            matching_input: guess,
+            guesses: temp.toString()
+        });
+    }
+    function saveHighscore(game){
+        highscore.create({
+            Points: game.score,
+            Usernames: game.playerOne.username + " and " + game.playerTwo.username
+        });
     }
 
     function shuffle(array) {
