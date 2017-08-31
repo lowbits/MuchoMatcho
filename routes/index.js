@@ -18,8 +18,6 @@ module.exports = function(io) {
     var playerIngame = [];
     var games = [];
 
-   // var factor_array=[];
-
     router.get('/', function(req, res, next) {
         highscore.findAll({
             limit: 10,
@@ -75,7 +73,6 @@ module.exports = function(io) {
       
         socket.on('disconnect', function() {
             console.log(this.id + ' disconnected');
-            socket.game.factor_array=[];
             if (this.game) {
                 endGame(this.game);
             } else {
